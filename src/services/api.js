@@ -42,22 +42,3 @@ export const fetchBeers = async ({
   }
 };
 
-export const fetchRandomBeer = async () => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/beers/random`);
-    return response.data[0];
-  } catch (error) {
-    console.error('Error fetching random beer:', error);
-    throw error;
-  }
-};
-
-export const fetchBeerById = async (id) => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/beers/${id}`);
-    return response.data[0];
-  } catch (error) {
-    console.error('Error fetching beer:', error);
-    throw error;
-  }
-};
