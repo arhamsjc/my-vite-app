@@ -1,0 +1,162 @@
+.data-table {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.filters-section {
+  padding: 1.5rem;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.filters-header h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0;
+}
+
+.filters-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 2rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.filter-group {
+  min-width: 200px;
+  margin-bottom: 1rem;
+}
+
+.filter-group h4 {
+  margin: 0 0 0.5rem 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.column-filter {
+  flex: 1;
+  min-width: 200px;
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.filter-option {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.table-container {
+  height: 600px;
+  overflow: auto;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #242424;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.thead {
+  position: sticky;
+  top: 0;
+  background: #242424;
+  z-index: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.tr {
+  display: flex;
+  border-bottom: 1px solid #333;
+  min-height: 80px; /* Increased row height */
+}
+
+.th, .td {
+  flex: 1;
+  padding: 1.5rem;
+  text-align: left;
+  min-width: 150px;
+  display: flex;
+  align-items: center;
+}
+
+.td {
+  color: #fff;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.th {
+  font-weight: 600;
+  background: #242424;
+  color: #fff;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  min-height: 60px;
+}
+
+.th:hover {
+  background: #2c2c2c;
+}
+
+.tbody .tr {
+  position: absolute;
+  left: 0;
+  right: 0;
+  transition: background-color 0.2s;
+}
+
+.tbody .tr:hover {
+  background: #2c2c2c;
+}
+
+/* Custom column widths */
+.th:nth-child(1), .td:nth-child(1) { /* Name */
+  flex: 2;
+  min-width: 250px;
+}
+
+.th:nth-child(2), .td:nth-child(2) { /* Tagline */
+  flex: 2;
+  min-width: 200px;
+}
+
+.th:nth-child(3), .td:nth-child(3) { /* First Brewed */
+  flex: 0.8;
+  min-width: 120px;
+}
+
+.th:nth-child(4), .td:nth-child(4), /* ABV */
+.th:nth-child(5), .td:nth-child(5), /* IBU */
+.th:nth-child(6), .td:nth-child(6) { /* EBC */
+  flex: 0.6;
+  min-width: 100px;
+  justify-content: flex-end;
+}
