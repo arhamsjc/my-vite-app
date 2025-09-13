@@ -44,22 +44,51 @@ export const TableProvider = ({ children }) => {
     }
   }, [filters]);
 
-  const trimData = useCallback((newData) => {
+  const trimData = useCallback((newData, fromDirection = 'bottom', addedCount = 0) => {
     if (newData.length > MAX_ITEMS) {
       const excess = newData.length - MAX_ITEMS;
-      if (excess > ITEMS_PER_PAGE) {
-        // Remove whole pages from the start
-        const pagesToRemove = Math.floor(excess / ITEMS_PER_PAGE);
-        newData = newData.slice(pagesToRemove * ITEMS_PER_PAGE);
-        setStartPage(prev => prev + pagesToRemove);
+      let removedCount = 0;
+
+      if (fromDirection === 'bottom') {
+        // When loading from bottom, remove from top
+        if (excess > ITEMS_PER_PAGE) {
+          const pagesToRemove = Math.floor(excess / ITEMS_PER_PAGE);
+          newData = newData.slice(pagesToRemove * ITEMS_PER_PAGE);
+          setStartPage(prev => prev + pagesToRemove);
+          removedCount = pagesToRemove * ITEMS_PER_PAGE;
+        } else {
+          newData = newData.slice(excess);
+          setStartPage(prev => prev + 1);
+          removedCount = excess;
+        }
       } else {
-        // Remove items from the start
-        newData = newData.slice(excess);
-        setStartPage(prev => prev + 1);
+        // When loading from top, remove from bottom
+        if (excess > ITEMS_PER_PAGE) {
+          const pagesToRemove = Math.floor(excess / ITEMS_PER_PAGE);
+          newData = newData.slice(0, newData.length - (pagesToRemove * ITEMS_PER_PAGE));
+          removedCount = pagesToRemove * ITEMS_PER_PAGE;
+        } else {
+          newData = newData.slice(0, newData.length - excess);
+          removedCount = excess;
+        }
       }
+
+      // Use requestAnimationFrame to adjust scroll position after the render
+      requestAnimationFrame(() => {
+        const tableContainer = document.querySelector('.table-container');
+        if (tableContainer) {
+          const rowHeight = 35; // Height of each row
+          if (fromDirection === 'bottom') {
+            tableContainer.scrollTop -= (removedCount * rowHeight);
+          } else {
+            // For previous data, we need to maintain the scroll position relative to existing content
+            tableContainer.scrollTop += (addedCount * rowHeight);
+          }
+        }
+      });
     }
     return newData;
-  }, []);
+  }, [ITEMS_PER_PAGE]);
 
   const loadMoreData = useCallback(async () => {
     if (!hasMore || isLoading) return;
@@ -84,7 +113,7 @@ export const TableProvider = ({ children }) => {
       if (newBeers.length > 0) {
         setData(prevData => {
           const updatedData = [...prevData, ...newBeers];
-          return trimData(updatedData);
+          return trimData(updatedData, 'bottom');
         });
         setCurrentPage(nextPage);
         setHasMore(newBeers.length === ITEMS_PER_PAGE);
@@ -96,7 +125,7 @@ export const TableProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [filters, hasMore, isLoading, currentPage, trimData]);
+  }, [filters, hasMore, isLoading, currentPage, trimData, ITEMS_PER_PAGE]);
 
   const loadPreviousData = useCallback(async () => {
     if (startPage <= 1 || isLoading) return;
@@ -121,12 +150,7 @@ export const TableProvider = ({ children }) => {
       if (prevBeers.length > 0) {
         setData(prevData => {
           const updatedData = [...prevBeers, ...prevData];
-          // When loading previous data, trim from the end instead of the beginning
-          if (updatedData.length > MAX_ITEMS) {
-            const excess = updatedData.length - MAX_ITEMS;
-            return updatedData.slice(0, updatedData.length - excess);
-          }
-          return updatedData;
+          return trimData(updatedData, 'top', prevBeers.length);
         });
         setStartPage(prevPage);
       }
@@ -135,7 +159,7 @@ export const TableProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [filters, isLoading, startPage, ITEMS_PER_PAGE]);
+  }, [filters, isLoading, startPage, ITEMS_PER_PAGE, trimData]);
 
   // Load data when pagination or filters change
   useEffect(() => {
