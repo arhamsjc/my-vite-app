@@ -10,8 +10,9 @@
 .filters-section {
   padding: 1.5rem;
   border-radius: 8px;
-  background: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: #242424;
+  border: 1px solid #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .filters-header {
@@ -19,13 +20,13 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
-  border-bottom: 2px solid #eee;
+  border-bottom: 2px solid #333;
   padding-bottom: 1rem;
 }
 
 .filters-header h3 {
   font-size: 1.5rem;
-  color: #333;
+  color: #fff;
   margin: 0;
 }
 
@@ -44,7 +45,7 @@
 
 .filter-group h4 {
   margin: 0 0 0.5rem 0;
-  color: #666;
+  color: #aaa;
   font-size: 0.9rem;
 }
 
@@ -92,12 +93,11 @@
 .tr {
   display: flex;
   border-bottom: 1px solid #333;
-  min-height: 80px; /* Increased row height */
 }
 
 .th, .td {
   flex: 1;
-  padding: 1.5rem;
+  padding: 4px;
   text-align: left;
   min-width: 150px;
   display: flex;

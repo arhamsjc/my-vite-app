@@ -3,22 +3,30 @@ input[type="text"],
 input[type="number"] {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #333;
   border-radius: 4px;
   font-size: 0.9rem;
   transition: border-color 0.2s;
+  background: #242424;
+  color: #fff;
 }
 
 input[type="text"]:focus,
 input[type="number"]:focus {
   border-color: #2196f3;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+input[type="text"]::placeholder,
+input[type="number"]::placeholder {
+  color: #888;
 }
 
 .range-inputs {
   display: flex;
   gap: 1rem;
+  background: #242424;
 }
 
 .range-inputs input {
@@ -27,7 +35,7 @@ input[type="number"]:focus {
 
 /* Clear filters button */
 .clear-filters {
-  background: #f44336;
+  background: #d32f2f;
   color: white;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -38,5 +46,5 @@ input[type="number"]:focus {
 }
 
 .clear-filters:hover {
-  background: #d32f2f;
+  background: #b71c1c;
 }
