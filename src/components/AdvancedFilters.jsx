@@ -80,16 +80,6 @@ export const AdvancedFilters = () => {
         />
       </div>
 
-      <div className="filter-group">
-        <h4>Food Pairing</h4>
-        <input
-          type="text"
-          placeholder="Search by food pairing"
-          value={filters.food || ''}
-          onChange={(e) => handleFilterChange('food', e.target.value)}
-        />
-      </div>
-
       <button 
         onClick={() => setFilters({})} 
         className="clear-filters"

@@ -14,7 +14,6 @@ export const fetchBeers = async ({
   ibuLt,
   ebcGt,
   ebcLt,
-  food,
   ids,
 }) => {
   try {
@@ -30,7 +29,6 @@ export const fetchBeers = async ({
       ...(ibuLt && { ibu_lt: ibuLt }),
       ...(ebcGt && { ebc_gt: ebcGt }),
       ...(ebcLt && { ebc_lt: ebcLt }),
-      ...(food && { food }),
       ...(ids?.length > 0 && { ids: ids.join(',') }),
     });
 

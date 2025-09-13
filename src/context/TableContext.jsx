@@ -29,7 +29,6 @@ export const TableProvider = ({ children }) => {
         ...(filters.ibu_lt && { ibuLt: filters.ibu_lt }),
         ...(filters.ebc_gt && { ebcGt: filters.ebc_gt }),
         ...(filters.ebc_lt && { ebcLt: filters.ebc_lt }),
-        ...(filters.food && { food: filters.food }),
       };
       
       const beers = await fetchBeers(apiParams);
@@ -42,7 +41,7 @@ export const TableProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [filters]);
+  }, [filters, ITEMS_PER_PAGE]);
 
   const trimData = useCallback((newData, fromDirection = 'bottom', addedCount = 0) => {
     if (newData.length > MAX_ITEMS) {
@@ -106,7 +105,6 @@ export const TableProvider = ({ children }) => {
         ...(filters.ibu_lt && { ibuLt: filters.ibu_lt }),
         ...(filters.ebc_gt && { ebcGt: filters.ebc_gt }),
         ...(filters.ebc_lt && { ebcLt: filters.ebc_lt }),
-        ...(filters.food && { food: filters.food }),
       };
 
       const newBeers = await fetchBeers(apiParams);
@@ -143,7 +141,6 @@ export const TableProvider = ({ children }) => {
         ...(filters.ibu_lt && { ibuLt: filters.ibu_lt }),
         ...(filters.ebc_gt && { ebcGt: filters.ebc_gt }),
         ...(filters.ebc_lt && { ebcLt: filters.ebc_lt }),
-        ...(filters.food && { food: filters.food }),
       };
 
       const prevBeers = await fetchBeers(apiParams);
@@ -171,7 +168,7 @@ export const TableProvider = ({ children }) => {
     const values = {};
     if (data && Array.isArray(data) && data.length > 0) {
       Object.keys(data[0]).forEach(column => {
-        if (['name', 'first_brewed', 'food_pairing'].includes(column)) {
+        if (['name', 'first_brewed'].includes(column)) {
           values[column] = [...new Set(data.map(item => String(item[column])))];
         }
       });

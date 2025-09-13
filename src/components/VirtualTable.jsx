@@ -2,6 +2,7 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
 import { useRef, useEffect, useCallback } from 'react';
 import { useTable } from '../hooks/useTable';
+import { EmptyState } from './EmptyState';
 
 const TableRow = ({ row, virtualRow }) => {
   const { height, start } = virtualRow;
@@ -83,6 +84,10 @@ export const VirtualTable = ({ columns }) => {
     estimateSize: () => 35,
     overscan: 10,
   });
+
+  if (filteredData.length === 0) {
+    return <EmptyState />;
+  }
 
   return (
     <div className="table-container" ref={parentRef}>
