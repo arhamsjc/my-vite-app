@@ -25,7 +25,16 @@ const TableRow = ({ row, virtualRow }) => {
 };
 
 export const VirtualTable = ({ columns }) => {
-  const { filteredData, sorting, setSorting, loadMoreData, isLoading } = useTable();
+  const { 
+    filteredData, 
+    sorting, 
+    setSorting, 
+    loadMoreData, 
+    loadPreviousData, 
+    isLoading,
+    hasMore,
+    startPage
+  } = useTable();
   const parentRef = useRef(null);
   
   const handleScroll = useCallback(() => {
@@ -35,11 +44,17 @@ export const VirtualTable = ({ columns }) => {
     if (!element) return;
     
     const { scrollHeight, scrollTop, clientHeight } = element;
+    
     // Load more data when user scrolls to 80% of the table
-    if (scrollHeight - scrollTop - clientHeight < scrollHeight * 0.2) {
+    if (scrollHeight - scrollTop - clientHeight < clientHeight * 0.2) {
       loadMoreData();
     }
-  }, [isLoading, loadMoreData]);
+    
+    // Load previous data when user scrolls near the top (within 20% of viewport)
+    if (scrollTop < clientHeight * 0.2) {
+      loadPreviousData();
+    }
+  }, [isLoading, loadMoreData, loadPreviousData]);
 
   useEffect(() => {
     const element = parentRef.current;
@@ -99,6 +114,25 @@ export const VirtualTable = ({ columns }) => {
             position: 'relative',
           }}
         >
+          {isLoading && startPage > 1 && (
+            <div
+              className="tr loading-row"
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '35px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderBottom: '1px solid #333'
+              }}
+            >
+              <div>Loading previous data...</div>
+            </div>
+          )}
           {rowVirtualizer.getVirtualItems().map(virtualRow => (
             <TableRow
               key={rows[virtualRow.index].id}
@@ -106,7 +140,7 @@ export const VirtualTable = ({ columns }) => {
               virtualRow={virtualRow}
             />
           ))}
-          {isLoading && (
+          {isLoading && hasMore && (
             <div
               className="tr loading-row"
               style={{
