@@ -106,6 +106,24 @@ export const VirtualTable = ({ columns }) => {
               virtualRow={virtualRow}
             />
           ))}
+          {isLoading && (
+            <div
+              className="tr loading-row"
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: '35px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'rgba(255, 255, 255, 0.9)'
+              }}
+            >
+              <div>Loading more data...</div>
+            </div>
+          )}
         </div>
       </div>
     </div>

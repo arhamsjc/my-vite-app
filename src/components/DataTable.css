@@ -137,6 +137,13 @@
   background: #2c2c2c;
 }
 
+.loading-row {
+  background: #242424;
+  color: #aaa;
+  font-size: 0.9rem;
+  border-top: 1px solid #333;
+}
+
 /* Custom column widths */
 .th:nth-child(1), .td:nth-child(1) { /* Name */
   flex: 2;
