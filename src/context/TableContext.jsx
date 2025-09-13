@@ -7,10 +7,8 @@ export const TableProvider = ({ children }) => {
   const [data, setData] = useState([]);
   const [sorting, setSorting] = useState([]);
   const [filters, setFilters] = useState({});
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: DEFAULT_PAGE_SIZE,
-  });
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   
   const loadData = useCallback(async () => {
@@ -18,8 +16,8 @@ export const TableProvider = ({ children }) => {
     try {
       // Convert filters to API parameters
       const apiParams = {
-        page: pagination.pageIndex + 1,
-        perPage: pagination.pageSize,
+        page: 1,
+        perPage: DEFAULT_PAGE_SIZE,
         ...(filters.name && { beerName: filters.name }),
         ...(filters.abv_gt && { abvGt: filters.abv_gt }),
         ...(filters.abv_lt && { abvLt: filters.abv_lt }),
@@ -32,12 +30,48 @@ export const TableProvider = ({ children }) => {
       
       const beers = await fetchBeers(apiParams);
       setData(beers);
+      setPage(1);
+      setHasMore(beers.length === DEFAULT_PAGE_SIZE);
     } catch (error) {
       console.error('Failed to load beers:', error);
     } finally {
       setIsLoading(false);
     }
-  }, [pagination, filters]);
+  }, [filters]);
+
+  const loadMoreData = useCallback(async () => {
+    if (!hasMore || isLoading) return;
+
+    setIsLoading(true);
+    try {
+      const nextPage = page + 1;
+      const apiParams = {
+        page: nextPage,
+        perPage: DEFAULT_PAGE_SIZE,
+        ...(filters.name && { beerName: filters.name }),
+        ...(filters.abv_gt && { abvGt: filters.abv_gt }),
+        ...(filters.abv_lt && { abvLt: filters.abv_lt }),
+        ...(filters.ibu_gt && { ibuGt: filters.ibu_gt }),
+        ...(filters.ibu_lt && { ibuLt: filters.ibu_lt }),
+        ...(filters.ebc_gt && { ebcGt: filters.ebc_gt }),
+        ...(filters.ebc_lt && { ebcLt: filters.ebc_lt }),
+        ...(filters.food && { food: filters.food }),
+      };
+
+      const newBeers = await fetchBeers(apiParams);
+      if (newBeers.length > 0) {
+        setData(prevData => [...prevData, ...newBeers]);
+        setPage(nextPage);
+        setHasMore(newBeers.length === DEFAULT_PAGE_SIZE);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('Failed to load more beers:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [filters, hasMore, isLoading, page]);
 
   // Load data when pagination or filters change
   useEffect(() => {
@@ -70,9 +104,9 @@ export const TableProvider = ({ children }) => {
     filters,
     setFilters,
     uniqueValues,
-    pagination,
-    setPagination,
     isLoading,
+    loadMoreData,
+    hasMore
   };
 
   return (

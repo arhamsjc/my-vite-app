@@ -1,6 +1,6 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table';
-import { useRef } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { useTable } from '../hooks/useTable';
 
 const TableRow = ({ row, virtualRow }) => {
@@ -25,9 +25,29 @@ const TableRow = ({ row, virtualRow }) => {
 };
 
 export const VirtualTable = ({ columns }) => {
-  const { filteredData, sorting, setSorting } = useTable();
-  console.log('Filtered Data:', filteredData);
+  const { filteredData, sorting, setSorting, loadMoreData, isLoading } = useTable();
   const parentRef = useRef(null);
+  
+  const handleScroll = useCallback(() => {
+    if (isLoading) return;
+    
+    const element = parentRef.current;
+    if (!element) return;
+    
+    const { scrollHeight, scrollTop, clientHeight } = element;
+    // Load more data when user scrolls to 80% of the table
+    if (scrollHeight - scrollTop - clientHeight < scrollHeight * 0.2) {
+      loadMoreData();
+    }
+  }, [isLoading, loadMoreData]);
+
+  useEffect(() => {
+    const element = parentRef.current;
+    if (!element) return;
+    
+    element.addEventListener('scroll', handleScroll);
+    return () => element.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   const table = useReactTable({
     data: filteredData,

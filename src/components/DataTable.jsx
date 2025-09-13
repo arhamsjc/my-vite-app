@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { VirtualTable } from './VirtualTable';
-import { PaginationControls } from './PaginationControls';
 import { AdvancedFilters } from './AdvancedFilters';
 import { useTable } from '../hooks/useTable';
 import './DataTable.css';
@@ -49,7 +48,6 @@ export const DataTable = () => {
         <AdvancedFilters />
       </div>
       <VirtualTable columns={columns} />
-      <PaginationControls />
     </div>
   );
 };
